@@ -1,4 +1,6 @@
 const synth = window.speechSynthesis;
+const timeline = document.querySelector("#timeline");
+const source = document.querySelector("#source");
 
 function speak(word, onend) {
   console.log('speak:', word);
@@ -23,17 +25,16 @@ function speak(word, onend) {
 function speakAll(words) {
   speak(words[0], () => {
     const remaining = words.slice(1);
+    timeline.value = timeline.max - remaining.length;
     if (remaining.length) {
       speakAll(remaining);
     }
   })
 }
 
-const inputForm = document.querySelector("form");
-inputForm.onsubmit = function (event) {
+document.querySelector("form").onsubmit = (event) => {
   event.preventDefault();
-
-  const words = document.querySelector("#source").value.split(" ");
-  
+  timeline.max = source.value.split(" ").length
+  const words = source.value.split(" ");
   speakAll(words);
 };
