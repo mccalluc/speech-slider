@@ -1,6 +1,7 @@
 const synth = window.speechSynthesis;
 
 function speak(word, onend) {
+  console.log('speak:', word);
   if (synth.speaking) {
     console.error("speechSynthesis.speaking");
     return;
@@ -17,18 +18,22 @@ function speak(word, onend) {
   };
 
   synth.speak(utterance);
+}
 
+function speakAll(words) {
+  speak(words[0], () => {
+    const remaining = words.slice(1);
+    if (remaining.length) {
+      speakAll(remaining);
+    }
+  })
 }
 
 const inputForm = document.querySelector("form");
 inputForm.onsubmit = function (event) {
   event.preventDefault();
 
-  speak("This",
-    () => speak("is",
-      () => speak("a",
-        () => speak("test")
-      )
-    )
-  );
+  const words = document.querySelector("#source").value.split(" ");
+  
+  speakAll(words);
 };
