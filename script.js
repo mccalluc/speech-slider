@@ -10,7 +10,7 @@ function speak(word, onend) {
   utterance.pitch = 1;
   utterance.rate = 0.8;
 
-  utterance.onend = onend
+  utterance.onend = onend;
 
   utterance.onerror = function (event) {
     console.error("SpeechSynthesisUtterance.onerror");
