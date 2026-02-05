@@ -3,7 +3,7 @@
   const timeline = document.querySelector("#timeline");
   const source = document.querySelector("#source");
   const sink = document.querySelector("#sink");
-  const playButton = document.querySelector("#play");
+
   var playing = false;
 
   function speak(word, onend) {
@@ -23,32 +23,39 @@
   }
 
   function getWords() {
-    return source.value.split(" ");
+    return source.value.split(RegExp("\\s+"));
   }
 
   function speakFrom() {
     const words = getWords()
-    const index = parseInt(timeline.value);
-    speak(words[index], () => {
-      timeline.value = index + 1;
-      if (playing && parseInt(timeline.value) < parseInt(timeline.max)) {
-        speakFrom();
-      }
-    })
+    speak(words[parseInt(timeline.value)], () => {
+      timeline.value = parseInt(timeline.value) + 1;
+      if (playing) {
+        if (parseInt(timeline.value) < parseInt(timeline.max)) {
+          speakFrom();
+        } else {
+          playing = false;
+        }
+      } 
+    });
   }
 
-  playButton.onclick = (event) => {
-    event.preventDefault();
-    playing = !playing;
-    if (playing) {
-      speakFrom();
-    }
-  };
+  timeline.onmousedown = (event) => {
+    console.log("down");
+    playing = false;
+  }
+
+  timeline.onmouseup = (event) => {
+    console.log("up");
+    playing = true;
+    speakFrom();
+  }
 
   function updateTimeline() {
     timeline.max = getWords().length;
     timeline.value = 0;
   }
+
   source.onchange = updateTimeline;
   updateTimeline();
   sink.value = "";

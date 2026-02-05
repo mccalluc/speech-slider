@@ -8,16 +8,22 @@
 
     <details open>
       <summary>Source text</summary>
-      <textarea id="source" cols="40" rows="4">Testing One two three four</textarea>
+      <textarea id="source" cols="60" rows="6">
+Please edit this text to fit your needs.
+Click on the timeline below to start or stop reading.
+Words are collected in the box below.
+      </textarea>
     </details>
     
-    <!-- More useful characters at https://en.wikipedia.org/wiki/Media_control_symbols -->
-    <button id="play">⏯</button>
-    <input type="range" id="timeline" min="0" max="1" value="0"/>
+    <!--
+      Add a play button? Or is the slider enough?
+      Useful characters at https://en.wikipedia.org/wiki/Media_control_symbols
+    -->
+    <input type="range" id="timeline" min="0" max="1" value="0" style="width: 100%;"/>
 
     <details open>
       <summary>Output text</summary>
-      <textarea id="sink" cols="40" rows="4" disabled></textarea>
+      <textarea id="sink" cols="60" rows="6" disabled></textarea>
     </details>
 
     <script src="script.js"></script>
