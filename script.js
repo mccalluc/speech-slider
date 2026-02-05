@@ -23,7 +23,8 @@
   }
 
   function getWords() {
-    return source.value.split(RegExp("\\s+"));
+    // Split on 1 or more non-word characters.
+    return source.textContent.split(RegExp("\\W+"));
   }
 
   function speakFrom() {
@@ -59,7 +60,7 @@
     timeline.value = 0;
   }
 
-  source.onchange = updateTimeline;
+  source.onblur = updateTimeline;
   updateTimeline();
   sink.value = "";
 })()
