@@ -24,18 +24,25 @@
 
   function getWords() {
     // Split on 1 or more non-word characters.
+    // TODO: Just use the spans?
     return source.textContent.split(RegExp("\\W+"));
+  }
+
+  function clearHighlights() {
+    const highlights = document.getElementsByClassName("current");
+    for (el of highlights) {
+      el.className = "";
+    }
   }
 
   function speakFrom() {
     const words = getWords();
     const index = parseInt(timeline.value);
     const word = words[index];
-    const span = document.getElementById(index);
-    span.className = "current";
+    document.getElementById(index).className = "current";
     if (word) {
       speak(word, () => {
-        span.className = "";
+        clearHighlights();
         if (playing) {
           timeline.value = parseInt(timeline.value) + 1;
           if (parseInt(timeline.value) < parseInt(timeline.max)) {
@@ -53,6 +60,7 @@
   }
 
   timeline.onmouseup = (event) => {
+    clearHighlights()
     playing = true;
     speakFrom();
   }
