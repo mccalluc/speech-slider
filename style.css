@@ -3,3 +3,7 @@
   border: 1px solid darkgray;
   font-family: monospace;
 }
+
+.current {
+  background-color: lightgray;
+}

@@ -31,8 +31,11 @@
     const words = getWords();
     const index = parseInt(timeline.value);
     const word = words[index];
+    const span = document.getElementById(index);
+    span.className = "current";
     if (word) {
       speak(word, () => {
+        span.className = "";
         if (playing) {
           timeline.value = parseInt(timeline.value) + 1;
           if (parseInt(timeline.value) < parseInt(timeline.max)) {
