@@ -3,7 +3,8 @@
   const timeline = document.querySelector("#timeline");
   const source = document.querySelector("#source");
   const sink = document.querySelector("#sink");
-  const readButton = document.querySelector("#read");
+  const playButton = document.querySelector("#play");
+  var playing = false;
 
   function speak(word, onend) {
     if (synth.speaking) {
@@ -30,15 +31,18 @@
     const index = parseInt(timeline.value);
     speak(words[index], () => {
       timeline.value = index + 1;
-      if (parseInt(timeline.value) < parseInt(timeline.max)) {
+      if (playing && parseInt(timeline.value) < parseInt(timeline.max)) {
         speakFrom();
       }
     })
   }
 
-  readButton.onclick = (event) => {
+  playButton.onclick = (event) => {
     event.preventDefault();
-    speakFrom();
+    playing = !playing;
+    if (playing) {
+      speakFrom();
+    }
   };
 
   function updateTimeline() {
