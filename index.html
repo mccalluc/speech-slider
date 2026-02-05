@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Speech Synth + Slider</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <details open>
+      <summary>Source text</summary>
+      <div class="box" contenteditable="true" id="source">
+Please edit this text to fit your needs.<br>
+Click on the timeline below to start reading.<br>
+Words are collected in the box below.<br>
+      </div>
+    </details>
+    
+    <!--
+      Add a play button? Or is the slider enough?
+      Useful characters at https://en.wikipedia.org/wiki/Media_control_symbols
+    -->
+    <input type="range" id="timeline" min="0" max="1" value="0" style="width: 100%;"/>
+
+    <details open>
+      <summary>Collected text</summary>
+      <div class="box" contenteditable="true" id="sink"></div>
+    </details>
+
+    <script src="script.js"></script>
+
+  </body>
+</html>
