@@ -59,6 +59,12 @@
     playing = false;
   }
 
+  timeline.oninput = () => {
+    clearHighlights();
+    const index = parseInt(timeline.value);
+    document.getElementById(index).className = "current";
+  }
+
   timeline.onmouseup = (event) => {
     clearHighlights()
     playing = true;
