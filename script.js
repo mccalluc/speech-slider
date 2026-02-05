@@ -27,17 +27,20 @@
   }
 
   function speakFrom() {
-    const words = getWords()
-    speak(words[parseInt(timeline.value)], () => {
-      timeline.value = parseInt(timeline.value) + 1;
-      if (playing) {
-        if (parseInt(timeline.value) < parseInt(timeline.max)) {
-          speakFrom();
-        } else {
-          playing = false;
-        }
-      } 
-    });
+    const words = getWords();
+    const word = words[parseInt(timeline.value)];
+    if (word) {
+      speak(words[parseInt(timeline.value)], () => {
+        if (playing) {
+          timeline.value = parseInt(timeline.value) + 1;
+          if (parseInt(timeline.value) < parseInt(timeline.max)) {
+            speakFrom();
+          } else {
+            playing = false;
+          }
+        } 
+      });
+    }
   }
 
   timeline.onmousedown = (event) => {
@@ -52,7 +55,7 @@
   }
 
   function updateTimeline() {
-    timeline.max = getWords().length;
+    timeline.max = getWords().length - 1;
     timeline.value = 0;
   }
 
