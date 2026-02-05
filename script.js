@@ -19,7 +19,7 @@
       console.error("SpeechSynthesisUtterance.onerror");
     };
     synth.speak(utterance);
-    sink.value += word + " ";
+    sink.innerHTML += word + " ";
   }
 
   function getWords() {
