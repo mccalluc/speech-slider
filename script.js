@@ -29,9 +29,10 @@
 
   function speakFrom() {
     const words = getWords();
-    const word = words[parseInt(timeline.value)];
+    const index = parseInt(timeline.value);
+    const word = words[index];
     if (word) {
-      speak(words[parseInt(timeline.value)], () => {
+      speak(word, () => {
         if (playing) {
           timeline.value = parseInt(timeline.value) + 1;
           if (parseInt(timeline.value) < parseInt(timeline.max)) {
@@ -45,17 +46,27 @@
   }
 
   timeline.onmousedown = (event) => {
-    console.log("down");
     playing = false;
   }
 
   timeline.onmouseup = (event) => {
-    console.log("up");
     playing = true;
     speakFrom();
   }
 
   function updateTimeline() {
+    const sourceText = source.textContent;
+    source.innerHTML = "";
+    var index = 0;
+    for (match of sourceText.matchAll(RegExp("(\\w+)(\\W+|$)", "g")).toArray()) {
+      const span = document.createElement("span");
+      span.textContent = match[1];
+      span.id = index.toString();
+      const text = document.createTextNode(match[2]);
+      source.appendChild(span);
+      source.appendChild(text);
+      index++;
+    }
     timeline.max = getWords().length - 1;
     timeline.value = 0;
   }
