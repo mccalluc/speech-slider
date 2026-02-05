@@ -1,40 +1,51 @@
-const synth = window.speechSynthesis;
-const timeline = document.querySelector("#timeline");
-const source = document.querySelector("#source");
+(() => {
+  const synth = window.speechSynthesis;
+  const timeline = document.querySelector("#timeline");
+  const source = document.querySelector("#source");
+  const sink = document.querySelector("#sink");
+  const readButton = document.querySelector("#read");
 
-function speak(word, onend) {
-  console.log('speak:', word);
-  if (synth.speaking) {
-    console.error("speechSynthesis.speaking");
-    return;
+  function speak(word, onend) {
+    if (synth.speaking) {
+      console.error("speechSynthesis.speaking");
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.pitch = 1;
+    utterance.rate = 0.8;
+    utterance.onend = onend;
+    utterance.onerror = function (event) {
+      console.error("SpeechSynthesisUtterance.onerror");
+    };
+    synth.speak(utterance);
+    sink.value += word + " ";
   }
 
-  const utterance = new SpeechSynthesisUtterance(word);
-  utterance.pitch = 1;
-  utterance.rate = 0.8;
+  function getWords() {
+    return source.value.split(" ");
+  }
 
-  utterance.onend = onend;
+  function speakFrom() {
+    const words = getWords()
+    const index = parseInt(timeline.value);
+    speak(words[index], () => {
+      timeline.value = index + 1;
+      if (parseInt(timeline.value) < parseInt(timeline.max)) {
+        speakFrom();
+      }
+    })
+  }
 
-  utterance.onerror = function (event) {
-    console.error("SpeechSynthesisUtterance.onerror");
+  readButton.onclick = (event) => {
+    event.preventDefault();
+    speakFrom();
   };
 
-  synth.speak(utterance);
-}
-
-function speakAll(words) {
-  speak(words[0], () => {
-    const remaining = words.slice(1);
-    timeline.value = timeline.max - remaining.length;
-    if (remaining.length) {
-      speakAll(remaining);
-    }
-  })
-}
-
-document.querySelector("form").onsubmit = (event) => {
-  event.preventDefault();
-  timeline.max = source.value.split(" ").length
-  const words = source.value.split(" ");
-  speakAll(words);
-};
+  function updateTimeline() {
+    timeline.max = getWords().length;
+    timeline.value = 0;
+  }
+  source.onchange = updateTimeline;
+  updateTimeline();
+  sink.value = "";
+})()
