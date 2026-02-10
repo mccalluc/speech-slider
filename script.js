@@ -22,6 +22,7 @@
     };
     synth.speak(utterance);
     sink.innerHTML += word + " ";
+    sink.scroll({top: sink.scrollHeight});
   }
 
   function getWords() {
