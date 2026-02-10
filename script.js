@@ -25,10 +25,8 @@
     sink.scroll({top: sink.scrollHeight});
   }
 
-  function getWords() {
-    // Split on 1 or more non-word characters.
-    // TODO: Just use the spans?
-    return source.textContent.split(RegExp("\\W+"));
+  function getWordSpans() {
+    return document.getElementsByTagName("span");
   }
 
   function clearHighlights() {
@@ -39,9 +37,9 @@
   }
 
   function speakFrom() {
-    const words = getWords();
+    const wordSpans = getWordSpans();
     const index = parseInt(timeline.value);
-    const word = words[index];
+    const word = wordSpans[index].textContent;
     document.getElementById(index).className = "current";
     if (word) {
       speak(word, () => {
@@ -62,9 +60,11 @@
 
   timeline.onmousedown = (event) => {
     playing = false;
+    updateTimeline();
   }
 
   timeline.oninput = () => {
+    // Just for updating display.
     clearHighlights();
     const index = parseInt(timeline.value);
     document.getElementById(index).className = "current";
@@ -82,6 +82,7 @@
   // Source text event handlers:
 
   function updateTimeline() {
+    console.log('updateTimeline');
     const sourceText = source.textContent;
     source.innerHTML = "";
     var index = 0;
@@ -94,11 +95,9 @@
       source.appendChild(text);
       index++;
     }
-    timeline.max = getWords().length - 1;
+    timeline.max = index;
     timeline.value = 0;
   }
-
-  source.onblur = updateTimeline;
 
   // Startup:
 
