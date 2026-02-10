@@ -2,6 +2,8 @@
   padding: 0.5em;
   border: 1px solid darkgray;
   font-family: monospace;
+  height: 6em;
+  overflow: hidden;
 }
 
 .current {

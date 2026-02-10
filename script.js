@@ -6,9 +6,12 @@
 
   var playing = false;
 
+  // Helpers:
+
   function speak(word, onend) {
+    console.debug("speak");
     if (synth.speaking) {
-      console.error("speechSynthesis.speaking");
+      console.debug("speechSynthesis.speaking");
       return;
     }
     const utterance = new SpeechSynthesisUtterance(word);
@@ -16,19 +19,15 @@
     utterance.rate = 0.8;
     utterance.onend = onend;
     utterance.onerror = function (event) {
-      console.error("SpeechSynthesisUtterance.onerror");
+      console.debug("SpeechSynthesisUtterance.onerror");
     };
     synth.speak(utterance);
     sink.innerHTML += word + " ";
-  }
-
-  function getWords() {
-    // Split on 1 or more non-word characters.
-    // TODO: Just use the spans?
-    return source.textContent.split(RegExp("\\W+"));
+    sink.scroll({top: sink.scrollHeight});
   }
 
   function clearHighlights() {
+    console.log("clearHighlights");
     const highlights = document.getElementsByClassName("current");
     for (el of highlights) {
       el.className = "";
@@ -36,9 +35,10 @@
   }
 
   function speakFrom() {
-    const words = getWords();
+    console.log("speakFrom");
+    const wordSpans = document.getElementsByTagName("span");
     const index = parseInt(timeline.value);
-    const word = words[index];
+    const word = wordSpans[index].textContent;
     document.getElementById(index).className = "current";
     if (word) {
       speak(word, () => {
@@ -55,23 +55,39 @@
     }
   }
 
+  // Timeline event handlers:
+
   timeline.onmousedown = (event) => {
+    console.debug('onmousedown');
     playing = false;
+    updateTimeline();
   }
 
   timeline.oninput = () => {
+    console.debug('oninput');
+    // Just for updating display.
     clearHighlights();
     const index = parseInt(timeline.value);
-    document.getElementById(index).className = "current";
+    const currentSpan = document.getElementById(index)
+    if (currentSpan) {
+      currentSpan.className = "current";
+    }
   }
 
   timeline.onmouseup = (event) => {
+    console.debug('onmouseup');
     clearHighlights()
     playing = true;
     speakFrom();
   }
 
+  timeline.ontouchstart = timeline.onmousedown;
+  timeline.ontouchend = timeline.onmouseup;
+
+  // Source text event handlers:
+
   function updateTimeline() {
+    console.debug('updateTimeline');
     const sourceText = source.textContent;
     source.innerHTML = "";
     var index = 0;
@@ -84,11 +100,12 @@
       source.appendChild(text);
       index++;
     }
-    timeline.max = getWords().length - 1;
+    timeline.max = index;
     timeline.value = 0;
   }
 
-  source.onblur = updateTimeline;
+  // Startup:
+
   updateTimeline();
   sink.value = "";
 })()
