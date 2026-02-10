@@ -9,8 +9,9 @@
   // Helpers:
 
   function speak(word, onend) {
+    console.debug("speak");
     if (synth.speaking) {
-      console.error("speechSynthesis.speaking");
+      console.debug("speechSynthesis.speaking");
       return;
     }
     const utterance = new SpeechSynthesisUtterance(word);
@@ -18,18 +19,15 @@
     utterance.rate = 0.8;
     utterance.onend = onend;
     utterance.onerror = function (event) {
-      console.error("SpeechSynthesisUtterance.onerror");
+      console.debug("SpeechSynthesisUtterance.onerror");
     };
     synth.speak(utterance);
     sink.innerHTML += word + " ";
     sink.scroll({top: sink.scrollHeight});
   }
 
-  function getWordSpans() {
-    return document.getElementsByTagName("span");
-  }
-
   function clearHighlights() {
+    console.log("clearHighlights");
     const highlights = document.getElementsByClassName("current");
     for (el of highlights) {
       el.className = "";
@@ -37,7 +35,8 @@
   }
 
   function speakFrom() {
-    const wordSpans = getWordSpans();
+    console.log("speakFrom");
+    const wordSpans = document.getElementsByTagName("span");
     const index = parseInt(timeline.value);
     const word = wordSpans[index].textContent;
     document.getElementById(index).className = "current";
@@ -59,18 +58,24 @@
   // Timeline event handlers:
 
   timeline.onmousedown = (event) => {
+    console.debug('onmousedown');
     playing = false;
     updateTimeline();
   }
 
   timeline.oninput = () => {
+    console.debug('oninput');
     // Just for updating display.
     clearHighlights();
     const index = parseInt(timeline.value);
-    document.getElementById(index).className = "current";
+    const currentSpan = document.getElementById(index)
+    if (currentSpan) {
+      currentSpan.className = "current";
+    }
   }
 
   timeline.onmouseup = (event) => {
+    console.debug('onmouseup');
     clearHighlights()
     playing = true;
     speakFrom();
@@ -82,7 +87,7 @@
   // Source text event handlers:
 
   function updateTimeline() {
-    console.log('updateTimeline');
+    console.debug('updateTimeline');
     const sourceText = source.textContent;
     source.innerHTML = "";
     var index = 0;
