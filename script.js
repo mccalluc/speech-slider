@@ -6,6 +6,8 @@
 
   var playing = false;
 
+  // Helpers:
+
   function speak(word, onend) {
     if (synth.speaking) {
       console.error("speechSynthesis.speaking");
@@ -55,6 +57,8 @@
     }
   }
 
+  // Timeline event handlers:
+
   timeline.onmousedown = (event) => {
     playing = false;
   }
@@ -70,6 +74,11 @@
     playing = true;
     speakFrom();
   }
+
+  timeline.ontouchstart = timeline.onmousedown;
+  timeline.ontouchend = timeline.onmouseup;
+
+  // Source text event handlers:
 
   function updateTimeline() {
     const sourceText = source.textContent;
@@ -89,6 +98,9 @@
   }
 
   source.onblur = updateTimeline;
+
+  // Startup:
+
   updateTimeline();
   sink.value = "";
 })()
